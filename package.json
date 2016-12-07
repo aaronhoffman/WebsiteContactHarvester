@@ -1,0 +1,24 @@
+{
+  "name": "websitecontactharvester",
+  "version": "1.0.0",
+  "description": "Crawl websites for contact information. Extract email, phone, facebook, twitter.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronhoffman/WebsiteContactHarvester.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaronhoffman/WebsiteContactHarvester/issues"
+  },
+  "homepage": "https://github.com/aaronhoffman/WebsiteContactHarvester#readme",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "sync-request": "^3.0.1",
+    "url-parse": "^1.1.7"
+  }
+}
