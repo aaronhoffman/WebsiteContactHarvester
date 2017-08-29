@@ -10,6 +10,8 @@ var websiteContactHarvester = function () {
     self.maxCrawlDepth = 2;
     self.phoneNumberRegEx = /\(?\d{3}\)?[-\s\.]?\d{3}[-\s\.]?\d{4}/;
 
+    // given the initial uri and the htmlContent from that uri
+    // parse all anchor tags from the htmlContent and compile an array of unique sibling uris
     self.getSiblingUris = function (uri, htmlContent) {
         var initialUri = urlParse(uri);
         var $ = cheerio.load(htmlContent);
@@ -20,6 +22,8 @@ var websiteContactHarvester = function () {
         while (i--) {
             var a = allAnchors[i];
             var aUri = urlParse(a.attribs.href);
+            // if the current uri is for the same host domain, and not exactly the original uri
+            // and we don't already have it in our array, add it
             if (aUri.host == initialUri.host && a.attribs.href != uri) {
                 if (siblingUris.indexOf(a.attribs.href) < 0)
                     siblingUris.push(a.attribs.href);
@@ -43,6 +47,9 @@ var websiteContactHarvester = function () {
         return htmlContent;
     };
 
+    // start with the uri provided and crawl the site for other uris
+    // crawl all sibling uris gathering the htmlcontent as we go until we hit the max crawl depth
+    // don't crawl the same uri twice
     self.recursiveCrawlSite = function (uriToCrawl, crawledPages, crawlDepth) {
         var htmlContent = self.getHtml(uriToCrawl);
         
@@ -51,7 +58,7 @@ var websiteContactHarvester = function () {
 
         crawledPages.push({ uri: uriToCrawl, htmlContent: htmlContent });
 
-        // if we reached the max crawl depth, return the collection
+        // if we reached the max crawl depth, just return the collection
         if (crawlDepth >= self.maxCrawlDepth)
             return crawledPages;
 
@@ -62,6 +69,7 @@ var websiteContactHarvester = function () {
         // filter the sibling uris, remove those we've already crawled
         var siblingUrisNotYetCrawled = siblingUris.filter(function (uri) { return crawledUris.indexOf(uri) < 0; });
 
+        // recursively call this method with the not-yet-crawled uris
         siblingUrisNotYetCrawled.forEach(function (uri) {
             crawledPages = self.recursiveCrawlSite(uri, crawledPages, (crawlDepth + 1));
         });
