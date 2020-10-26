@@ -1,6 +1,5 @@
 'use strict';
 
-var fs = require("fs");
 var urlParse = require("url-parse");
 var websiteContactHarvester = require("./websiteContactHarvester.js");
 
@@ -10,31 +9,36 @@ var sites = require("./sitesToCrawl.js");
 var sitesToCrawl = new sites();
 var wch = new websiteContactHarvester();
 
-// ensure output dir exists
-var outputDir = "./output";
-if (!fs.existsSync(outputDir))
-    fs.mkdirSync(outputDir);
+var sites = process.argv.slice(2)
+//console.log(sites)
+var allContactInfoFromSite = [];
 
-sitesToCrawl.uris.forEach(function (uri) {
+if (sites.length === 0 || sites[0] === "") {
+    console.log("Please enter a URL")
+    process.exit();
+}
+
+for (var i in sites) {
+
     try {
-        console.log("start crawling: " + uri);
+        console.log("start crawling: " + sites[i]);
 
-        var url = urlParse(uri);
-        var pagesToParse = wch.recursiveCrawlSite(uri, [], 1);
+        var url = urlParse(sites[i]);
+        var pagesToParse = wch.recursiveCrawlSite(sites[i], [], 1);
 
-        var allContactInfoFromSite = [];
         pagesToParse.forEach(function(page) {
             var newInfosFromPage = wch.harvestContactInfo(page.uri, page.htmlContent);
             newInfosFromPage.forEach(function(ni) { allContactInfoFromSite.push(ni); });
         });
 
-        fs.writeFileSync(outputDir + "/" + url.host + ".json", JSON.stringify(allContactInfoFromSite));
-        fs.appendFileSync(outputDir + "/" + "allInfos.json", JSON.stringify(allContactInfoFromSite));
-        // todo: save retrieved html content to file
     }
     catch (e) {
-        console.log("exeption while crawling: " + uri);
+        console.log("exeption while crawling: " + sites[i]);
     }
-});
+    
+
+}
+
+console.log(JSON.stringify(allContactInfoFromSite))
 
 process.exit();

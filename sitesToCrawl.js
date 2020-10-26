@@ -1,8 +1,7 @@
 var sitesToCrawl = function() {
     var self = this;
     self.uris = [
-        'https://www.google.com/',
-        'https://www.yahoo.com/'
+        'https://talent1st.com.au/'
     ];
 };
 module.exports = sitesToCrawl;
