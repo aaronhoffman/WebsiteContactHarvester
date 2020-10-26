@@ -3,9 +3,6 @@
 var urlParse = require("url-parse");
 var websiteContactHarvester = require("./websiteContactHarvester.js");
 
-// see here: update list of uris to crawl
-var sites = require("./sitesToCrawl.js");
-
 var sitesToCrawl = new sites();
 var wch = new websiteContactHarvester();
 

@@ -97,7 +97,7 @@ var websiteContactHarvester = function () {
         i = emailMatches.length;
         while (i--) {
             var e = emailMatches[i];
-            infos.push({ host: url.host, uri: uri, infoType: "email", value: e.attribs.href.replace("mailto:", "") });
+            infos.push({ host: url.host, uri: uri, infoType: "email", value: e.attribs.href.replace("mailto:", "").trim() });
         }
 
         // anchors with twitter
