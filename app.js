@@ -2,8 +2,6 @@
 
 var urlParse = require("url-parse");
 var websiteContactHarvester = require("./websiteContactHarvester.js");
-
-var sitesToCrawl = new sites();
 var wch = new websiteContactHarvester();
 
 var sites = process.argv.slice(2)
